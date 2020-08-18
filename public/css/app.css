@@ -35792,6 +35792,22 @@ readers do not read off random characters that represent icons */
   font-weight: 400; }
 @charset "UTF-8";
 
+.blue {
+  color: #3490dc;
+}
+
+.green {
+  color: #38c172;
+}
+
+.red {
+  color: #e3342f;
+}
+
+.orange {
+  color: #f6993f;
+}
+
 /*!
  * Bootstrap v4.5.2 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
