@@ -9,6 +9,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import { Form, HasError, AlertError } from 'vform'
+import moment from 'moment'
 window.form = Form;
 
 // const files = require.context('./', true, /\.vue$/i);
@@ -31,6 +32,17 @@ let routes=[
 const router = new VueRouter({
     mode: 'history',
     routes // short for `routes: routes`
+})
+
+Vue.filter('textUppercase',function(value){
+    if(!value)
+        return ''
+    value = value.toString()
+    return  value.charAt(0).toUpperCase()+value.slice(1);
+})
+
+Vue.filter('myDate',function(date){
+    return moment(date).format('MMMM Do YYYY');
 })
 
 /**

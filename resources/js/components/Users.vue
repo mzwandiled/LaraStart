@@ -19,15 +19,17 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Type</th>
+                                <th>Registered At</th>
                                 <th>Modify</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>183</td>
-                                <td>John Doe</td>
-                                <td>11-7-2014</td>
-                                <td><span class="tag tag-success">Approved</span></td>
+                            <tr v-for="user in users" :key="user.id">
+                                <td>{{user.id}}</td>
+                                <td>{{user.name}}</td>
+                                <td>{{user.email}}</td>
+                                <td>{{user.type | textUppercase}}</td>
+                                <td>{{user.created_at| myDate}}</td>
                                 <td>
                                     <a href="#">
                                     <i class="fa fa-edit"></i>
@@ -57,6 +59,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    <form @submit.prevent="createUser" >
                     <div class="modal-body">
                         <div class="form-group">
                             <input v-model="form.name" type="text" name="name"
@@ -79,7 +82,6 @@
                         </div>
                         <div class="form-group">
                             <textarea name="bio" id="bio" cols="60" rows="3" class="" v-model="form.bio" placeholder="Shot bio user info">
-
                             </textarea>
                         </div>
                         <div class="form-group">
@@ -93,9 +95,11 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Create</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
                     </div>
+                    </form>
                 </div>
+
             </div>
         </div>
     </div>
@@ -105,7 +109,7 @@
     export default {
         name: "Users",
 
-        data(){
+        data:function(){
             return {
                 form: new form({
                     name: '',
@@ -114,8 +118,32 @@
                     type: '',
                     bio:'',
                     photo: ''
-                })
+                }),
+                users:[]
             }
+        },
+        methods: {
+            loadUsers(){
+              axios.get('api/users').then(({data})=>(this.users = data.data));
+            },
+            createUser(){
+                //submit the post via the POst
+                this.form.post('/api/users')
+                    .then(({data})=>{
+                        console.log(data)
+                    })
+            }
+        },
+        filters: {
+            capitalize:function(value){
+                    if(!value)
+                        return ''
+                value = value.toString()
+                return value.charAt(0).toUpperCase()+ value.slice(1)
+            }
+        },
+        created() {
+            this.loadUsers()
         }
     }
 </script>
