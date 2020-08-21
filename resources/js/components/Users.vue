@@ -76,7 +76,7 @@
                         </div>
                         <div class="form-group">
                             <input v-model="form.password" type="password" name="password"
-                                   placeholder="Password"
+                                   placeholder="Password" autocomplete="on"
                                    class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
                             <has-error :form="form" field="password"></has-error>
                         </div>
@@ -127,11 +127,22 @@
               axios.get('api/users').then(({data})=>(this.users = data.data));
             },
             createUser(){
+                this.$Progress.start();
                 //submit the post via the POst
                 this.form.post('/api/users')
-                    .then(({data})=>{
-                        console.log(data)
-                    })
+                    .then(()=>{
+                        Fire.$emit('AfterCreate');
+                        $('#addNew').modal('hide');
+                        toast.fire({
+                            icon: 'success',
+                            title: 'User Created successfully'
+                        })
+                        this.$Progress.finish();
+
+                    }).catch(()=>{
+                        //console.log(errr)
+                });
+
             }
         },
         filters: {
@@ -144,6 +155,10 @@
         },
         created() {
             this.loadUsers()
+            //setInterval(()=>this.loadUsers(),3000)
+            Fire.$on('AfterCreate',()=>{
+                this.loadUsers();
+            });
         }
     }
 </script>

@@ -10,6 +10,10 @@ require('./bootstrap');
 window.Vue = require('vue');
 import { Form, HasError, AlertError } from 'vform'
 import moment from 'moment'
+import swal from 'sweetalert2'
+
+
+window.swal = swal;
 window.form = Form;
 
 // const files = require.context('./', true, /\.vue$/i);
@@ -17,6 +21,8 @@ window.form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 import VueRouter from 'vue-router'
+import VueProgressBar from 'vue-progressbar'
+
 Vue.use(VueRouter)
 import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
@@ -34,6 +40,22 @@ const router = new VueRouter({
     routes // short for `routes: routes`
 })
 
+const toast = swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  onOpen: (toast) => {
+    toast.addEventListener('mouseenter', swal.stopTimer)
+    toast.addEventListener('mouseleave', swal.resumeTimer)
+  }
+})
+
+window.toast = toast;
+
+window.Fire = new Vue();
+
 Vue.filter('textUppercase',function(value){
     if(!value)
         return ''
@@ -44,6 +66,13 @@ Vue.filter('textUppercase',function(value){
 Vue.filter('myDate',function(date){
     return moment(date).format('MMMM Do YYYY');
 })
+Vue.use(VueProgressBar, {
+  color: 'rgb(143, 255, 199)',
+  failedColor: 'red',
+  height: '3px'
+})
+
+
 
 /**
  * The following block of code may be used to automatically register your
