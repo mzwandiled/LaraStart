@@ -31,12 +31,12 @@
                                 <td>{{user.type | textUppercase}}</td>
                                 <td>{{user.created_at| myDate}}</td>
                                 <td>
-                                    <a href="#">
+                                    <a href="#" >
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     /
-                                    <a href="#">
-                                        <i class="fa fa-trash"></i>
+                                    <a href="#" @click="deleteUser(user.id)">
+                                        <i class="fa fa-trash text-red"></i>
                                     </a>
 
                                 </td>
@@ -123,6 +123,35 @@
             }
         },
         methods: {
+            deleteUser(id){
+                swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+
+                    //send a request to the server
+                    this.form.delete().then(()=>{
+                        swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+
+                    }).catch(()=>{
+                        swal.fire(
+                            'Failed!',
+                            'There was something wrong',
+                            'warning'
+                        )
+                    })
+
+                })
+            },
             loadUsers(){
               axios.get('api/users').then(({data})=>(this.users = data.data));
             },
@@ -140,7 +169,7 @@
                         this.$Progress.finish();
 
                     }).catch(()=>{
-                        //console.log(errr)
+                        //console.log(errors)
                 });
 
             }
